@@ -5,12 +5,13 @@ from engine.graphics.texture import *
 from engine.graphics.shader import *
 from engine.math.time import *
 from engine.math import util as math_util
-
+from math import cos, sin
 import world
 
 # Створюємо вікно з
 Window.create(width=1280, height=720, title='PyCraft', resizable=True)
 Window.set_icon('assets/icon.png')
+Window.set_mouse_grabbed(True)
 
 # Включаємо перевірку на глибину
 glEnable(GL_DEPTH_TEST)
@@ -34,8 +35,11 @@ fps = 0
 
 camera_position = glm.vec3(20.0, 15.0, 20.0)
 speed = 4.317
+rotate_speed = 0.04
 
 render_mode = False
+
+camera_rotation = glm.vec3()
 
 # Основний цикл вікна
 while Window.is_running():
@@ -53,17 +57,31 @@ while Window.is_running():
         fps = 0
     
     if Window.is_key_pressed(pygame.K_w):
-        camera_position.z -= speed * time.get_delta()
+        camera_position.x += speed * sin(glm.radians(camera_rotation.y)) * time.get_delta()
+        camera_position.z -= speed * cos(glm.radians(camera_rotation.y)) * time.get_delta()
+        
     if Window.is_key_pressed(pygame.K_s):
-        camera_position.z += speed * time.get_delta()
+        camera_position.x += speed * sin(glm.radians(camera_rotation.y + 180.0)) * time.get_delta()
+        camera_position.z -= speed * cos(glm.radians(camera_rotation.y + 180.0)) * time.get_delta()
+        
     if Window.is_key_pressed(pygame.K_d):
-        camera_position.x += speed * time.get_delta()
+        camera_position.x += speed * sin(glm.radians(camera_rotation.y + 90.0)) * time.get_delta()
+        camera_position.z -= speed * cos(glm.radians(camera_rotation.y + 90.0)) * time.get_delta()
+        
     if Window.is_key_pressed(pygame.K_a):
-        camera_position.x -= speed * time.get_delta()
+        camera_position.x += speed * sin(glm.radians(camera_rotation.y - 90.0)) * time.get_delta()
+        camera_position.z -= speed * cos(glm.radians(camera_rotation.y - 90.0)) * time.get_delta()
+        
     if Window.is_key_pressed(pygame.K_SPACE):
         camera_position.y += speed * time.get_delta()
+        
     if Window.is_key_pressed(pygame.K_LSHIFT):
         camera_position.y -= speed * time.get_delta()
+    
+    camera_rotation.x = glm.clamp(camera_rotation.x + Window.get_mouse_velocity().y * rotate_speed, -90.0, 90.0)
+    
+    camera_rotation.y += Window.get_mouse_velocity().x * rotate_speed
+    camera_rotation.y -= glm.floor(camera_rotation.y / 360.0) * 360.0
     
     if Window.is_key_just_pressed(pygame.K_F7):
         render_mode = not render_mode
@@ -76,7 +94,7 @@ while Window.is_running():
     world_shader_program.set_uniform_integer('colorSampler', 0)
     world_shader_program.set_uniform_mat4f('projection', glm.perspective(glm.radians(90.0), Window.get_width() / Window.get_height(), 0.01, 500.0))
     
-    world_shader_program.set_uniform_mat4f('view', math_util.make_view_mat4(camera_position, glm.vec3()))
+    world_shader_program.set_uniform_mat4f('view', math_util.make_view_mat4(camera_position, camera_rotation))
 
     #Texture.load(0, texture)
     for chunk_pos in chunk_meshes.keys():
