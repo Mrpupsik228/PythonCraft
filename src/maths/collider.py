@@ -5,10 +5,10 @@ class Collider:
         self.size = size
 
     def get_min(self, transform: Transform) -> glm.vec3:
-        return transform.position - transform.scale * self.size / 2.0
+        return transform.position - transform.scale * self.size * 0.5
     
     def get_max(self, transform: Transform) -> glm.vec3:
-        return transform.position + transform.scale * self.size / 2.0
+        return transform.position + transform.scale * self.size * 0.5
 
     def get_extended(self, scale: glm.vec3):
         return Collider(self.size + scale)
@@ -45,7 +45,6 @@ class Collider:
 
         if max_a.x <= min_b.x or min_a.x >= max_b.x:
             return velocity
-
         if max_a.z <= min_b.z or min_a.z >= max_b.z:
             return velocity
 
@@ -53,7 +52,6 @@ class Collider:
             _max = max_b.y - min_a.y
             if _max > velocity:
                 velocity = _max
-    
         if velocity > 0.0 and max_a.y <= min_b.y:
             _max = min_b.y - max_a.y
             if _max < velocity:

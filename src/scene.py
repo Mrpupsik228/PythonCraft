@@ -57,7 +57,7 @@ class GameScene(Scene):
             self.chunk_meshes[chunk_pos] = world.ChunkMesh(world.chunks[chunk_pos])
 
         self.time = Time()
-        self.player = LivingEntity(Transform(glm.vec3(20.5, 0.0, 20.5), glm.vec3(), glm.vec3(0.23, 0.86, 0.23))) # Коллайдеры от -1 до 1, так что высота складывается и вместо 1.72 метра получаем в два раза выше
+        self.player = LivingEntity(Transform(glm.vec3(20.5, 0.0, 20.5), glm.vec3(), glm.vec3(0.3, 1.72, 0.3))) # Коллайдеры от -1 до 1, так что высота складывается и вместо 1.72 метра получаем в два раза выше
         for i in range(world.Chunk.HEIGHT):
             if world.get_block(int(self.player.transform.position.x), int(glm.max(i - glm.ceil(self.player.transform.scale.y), 0)), int(self.player.transform.position.z)) == 0:
                 self.player.transform.position.y = i - self.player.transform.scale.y * 0.5
@@ -107,7 +107,7 @@ class GameScene(Scene):
         self.camera.teleport(
             glm.vec3(
                 self.player.transform.position.x,
-                self.player.transform.position.y + self.player.transform.scale.y - 0.05,
+                self.player.transform.position.y + self.player.transform.scale.y * 0.5 - 0.05,
                 self.player.transform.position.z
             ),
             self.player.transform.rotation
