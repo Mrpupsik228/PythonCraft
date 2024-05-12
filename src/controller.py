@@ -29,7 +29,7 @@ def by_user(entity: LivingEntity) -> None:
     entity.velocity.z = move_velocity.y
 
     if Window.is_key_pressed(pygame.K_SPACE):
-        entity.jump(8.0 * 2.0)
+        entity.jump(9)
     
     entity.transform.rotation.y += Window.get_mouse_velocity().x * 0.07
     entity.transform.rotation.x += Window.get_mouse_velocity().y * 0.07
