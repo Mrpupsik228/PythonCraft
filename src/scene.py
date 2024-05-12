@@ -10,6 +10,7 @@ import pygame
 
 from engine.maths import util as math_util
 from engine.maths.time import *
+from engine.sound import *
 
 from maths.transform import *
 from entity import LivingEntity
@@ -185,7 +186,7 @@ class SoundMenu(Scene):
     def load(self) -> None:
         super().load()
         
-        self.volume_index = 0
+        self.volume_index = 2
         self.volume_textures = [
             Texture.load_from_file('assets/textures/volume_off.png'),
             Texture.load_from_file('assets/textures/volume_25.png'),
@@ -204,6 +205,14 @@ class SoundMenu(Scene):
             self.volume_index += 1
             if self.volume_index >= len(self.volume_textures):
                 self.volume_index = 0
+            if self.volume_index == 0:
+                SoundSource().set_volume(0)
+            elif self.volume_index == 1:
+                SoundSource().set_volume(0.25)
+            elif self.volume_index == 2:
+                SoundSource().set_volume(0.5)
+            else:
+                SoundSource().set_volume(1)
         
             self.volume_button.texture = self.volume_textures[self.volume_index]
         

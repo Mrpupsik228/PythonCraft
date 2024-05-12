@@ -6,6 +6,8 @@ from engine.maths.util import make_model_mat4
 from OpenGL.GL import glDisable, glEnable, GL_DEPTH_TEST, GL_CULL_FACE
 from maths.transform import *
 from maths.util import *
+from engine.sound import *
+
 
 _square: Mesh
 _shader: ShaderProgram
@@ -17,6 +19,8 @@ class Button:
         self.position = position
         self.scale = scale
         self.texture = texture
+        self.sound = SoundSource()
+        self.sound.set_sound('assets/sounds/aihk.wav')
 
         Button._buttons.append(self)
     
@@ -30,8 +34,11 @@ class Button:
     def is_pressed(self) -> bool:
         return self.is_hovered() and Window.is_mouse_pressed(0)
     def is_just_pressed(self) -> bool:
-        
-        return self.is_hovered() and Window.is_mouse_just_pressed(0)
+        if self.is_hovered() and Window.is_mouse_just_pressed(0):
+            self.sound.play(False)
+            return True
+        else:
+            return False
     
     def clear(self) -> None:
         Texture.clear(self.texture.get_id())
