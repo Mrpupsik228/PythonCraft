@@ -3,24 +3,32 @@ from pygame.image import load as pygame_image_load
 from pygame.image import tostring as pygame_image_tostring
 
 class Texture:
-    @staticmethod
-    def load_from_bytes(data: bytes, width: int, height: int) -> int:
-        id = glGenTextures(1)
+    def __init__(self, data: bytes, width: int, height: int) -> None:
+        self._id = glGenTextures(1)
         
-        glBindTexture(GL_TEXTURE_2D, id)
+        glBindTexture(GL_TEXTURE_2D, self._id)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data)
         glGenerateMipmap(GL_TEXTURE_2D)
 
-        return id
+        self._width = width
+        self._height = height
+    
+    def get_width(self) -> int:
+        return self._width
+    def get_height(self) -> int:
+        return self._height
+    def get_id(self) -> int:
+        return self._id
+
     @staticmethod
-    def load_from_file(location: str) -> int:
+    def load_from_file(location: str):
         image = pygame_image_load(location).convert_alpha()
         image_width, image_height = image.get_rect().size
 
-        return Texture.load_from_bytes(pygame_image_tostring(image, 'RGBA'), image_width, image_height)
+        return Texture(pygame_image_tostring(image, 'RGBA'), image_width, image_height)
     
     # bank - это что-то типа номера текстуры, в который мы и загрузим ее, а уже в шейдере его можно будет получить, предварительно отправив по его названию set_uniform_integer('название', bank)
     @staticmethod

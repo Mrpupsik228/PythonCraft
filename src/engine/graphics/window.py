@@ -31,6 +31,10 @@ class Window:
         pygame.display.set_icon(pygame.image.load(location))
     
     @staticmethod
+    def set_title(title: str) -> None:
+        pygame.display.set_caption(title)
+    
+    @staticmethod
     def set_mouse_grabbed(grabbed: bool) -> None:
         pygame.event.set_grab(grabbed)
         pygame.mouse.set_visible(not grabbed)
@@ -47,9 +51,9 @@ class Window:
             elif event.type == pygame.KEYUP:
                 Window._keys[event.key] = 0
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                Window._buttons[event.button] = Window._current_frame
+                Window._buttons[event.button - 1] = Window._current_frame
             elif event.type == pygame.MOUSEBUTTONUP:
-                Window._buttons[event.button] = 0
+                Window._buttons[event.button - 1] = 0
 
         Window._mouse_velocity = pygame.mouse.get_rel()
         pygame.display.flip()

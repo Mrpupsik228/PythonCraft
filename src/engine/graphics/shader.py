@@ -60,16 +60,22 @@ class ShaderProgram:
     
     def set_uniform_boolean(self, id: str, value: bool) -> None:
         glUniform1i(glGetUniformLocation(self._id, id), 1 if value else 0)
+    
     def set_uniform_integer(self, id: str, value: int) -> None:
         glUniform1i(glGetUniformLocation(self._id, id), value)
+    
     def set_uniform_float(self, id: str, value: float) -> None:
         glUniform1f(glGetUniformLocation(self._id, id), value)
-    def set_uniform_2f(self, id: str, value) -> None:
-        glUniform2f(glGetUniformLocation(self._id, id), value)
-    def set_uniform_3f(self, id: str, value) -> None:
-        glUniform3f(glGetUniformLocation(self._id, id), value)
-    def set_uniform_4f(self, id: str, value) -> None:
-        glUniform4f(glGetUniformLocation(self._id, id), value)
+    
+    def set_uniform_2f(self, id: str, value: glm.vec2) -> None:
+        glUniform2f(glGetUniformLocation(self._id, id), value.x, value.y)
+    
+    def set_uniform_3f(self, id: str, value: glm.vec3) -> None:
+        glUniform3f(glGetUniformLocation(self._id, id), value.x, value.y, value.z)
+    
+    def set_uniform_4f(self, id: str, value: glm.vec4) -> None:
+        glUniform4f(glGetUniformLocation(self._id, id), value.x, value.y, value.z, value.w)
+    
     def set_uniform_mat4f(self, id: str, value: glm.mat4) -> None:
         glUniformMatrix4fv(glGetUniformLocation(self._id, id), 1, GL_FALSE, value.to_list())
     
