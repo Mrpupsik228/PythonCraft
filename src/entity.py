@@ -46,8 +46,6 @@ class LivingEntity(Entity):
                     if block != 0:
                         block_transform = Transform(glm.vec3(x, y, z) + 0.5, glm.vec3(), glm.vec3(1.0))
                         scaled_velocity.x = self.collider.clip_x(self.transform, block_transform, block_collider, scaled_velocity.x)
-                    
-                        hitbox.render(block_transform, glm.vec3(1.0, 0.0, 0.0))
         self.transform.position.x += scaled_velocity.x
 
         for x in range_x:
