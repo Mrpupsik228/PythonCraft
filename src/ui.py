@@ -30,7 +30,7 @@ class Button:
         aspect = self.texture.get_width() / self.texture.get_height()
         scale.x *= aspect
 
-        return is_point_inside_area(convert_screen_to_ui(Window.get_mouse_position()), get_min(self.position, scale), get_max(self.position, scale))
+        return is_point_inside_area(convert_screen_to_ui(Window.get_mouse_position()) , get_min(self.position, scale), get_max(self.position, scale))
     def is_pressed(self) -> bool:
         return self.is_hovered() and Window.is_mouse_pressed(0)
     def is_just_pressed(self) -> bool:

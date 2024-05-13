@@ -1,7 +1,9 @@
 from pygame import mixer
 
 mixer.init()
-mixer.pause()
+
+class Mixel:
+    pass
 
 class SoundSource:
     def __init__(self) -> None:

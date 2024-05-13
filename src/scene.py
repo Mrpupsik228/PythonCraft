@@ -20,6 +20,13 @@ from maths.camera import Camera
 from engine.graphics.window import Window
 from engine.graphics.texture import Texture
 
+from network.client import *
+from network.translator import ReadMode
+
+from client_main import network
+
+from struct import pack
+
 class Scene:
     _current = None
 
@@ -113,7 +120,7 @@ class GameScene(Scene):
             ),
             self.player.transform.rotation
         )
-    
+
     def update(self) -> None:
         super().update()
         self.time.update()
@@ -160,7 +167,7 @@ class MainMenuScene(Scene):
         ui.end()
         
         if self.options_button.is_just_pressed():
-            Scene.set_scene(OptinsMenu())
+            Scene.set_scene(SettingsMenuScene())
             
         if self.play_button.is_just_pressed():
             Scene.set_scene(GameScene())
@@ -182,19 +189,20 @@ class MainMenuScene(Scene):
 
         ui.Button.clear_all()
 
-class SoundMenu(Scene):
+class SoundSettingsMenuScene(Scene):
     def load(self) -> None:
         super().load()
         
-        self.volume_index = 2
         self.volume_textures = [
             Texture.load_from_file('assets/textures/volume_off.png'),
             Texture.load_from_file('assets/textures/volume_25.png'),
             Texture.load_from_file('assets/textures/volume_50.png'),
             Texture.load_from_file('assets/textures/volume_100.png')
         ]
+        self.volume_index = len(self.volume_textures) - 1
+
         self.volume_button = ui.Button(glm.vec2(0.0, 0.0), 0.4, self.volume_textures[self.volume_index])
-        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file("assets/textures/back_button.png"))
+        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file('assets/textures/back_button.png'))
 
     def update(self) -> None:
         super().update()
@@ -205,22 +213,15 @@ class SoundMenu(Scene):
             self.volume_index += 1
             if self.volume_index >= len(self.volume_textures):
                 self.volume_index = 0
-            if self.volume_index == 0:
-                SoundSource().set_volume(0)
-            elif self.volume_index == 1:
-                SoundSource().set_volume(0.25)
-            elif self.volume_index == 2:
-                SoundSource().set_volume(0.5)
-            else:
-                SoundSource().set_volume(1)
-        
+            
+            # TODO: Replace to real global volume option
+            kakayato_nastroyka_gromkosti = self.volume_index / (len(self.volume_textures) - 1.0)
             self.volume_button.texture = self.volume_textures[self.volume_index]
         
         ui.end()
         
         if self.back_button.is_just_pressed():
-            print("Volume")
-            Scene.set_scene(OptinsMenu())
+            Scene.set_scene(SettingsMenuScene())
     
     def unload(self) -> None:
         super().unload()
@@ -230,13 +231,13 @@ class SoundMenu(Scene):
         
         ui.Button.clear_all()
 
-class OptinsMenu(Scene):
+class SettingsMenuScene(Scene):
     def load(self) -> None:
         super().load()
         
         self.info_button = ui.Button(glm.vec2(0.2, 0.0), 0.4, Texture.load_from_file('assets/textures/info_button.png'))
         self.volume_button = ui.Button(glm.vec2(-0.2, 0.0), 0.4, Texture.load_from_file('assets/textures/volume_100.png'))
-        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file("assets/textures/back_button.png"))
+        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file('assets/textures/back_button.png'))
 
     def update(self) -> None:
         super().update()
@@ -245,25 +246,25 @@ class OptinsMenu(Scene):
         ui.end()
         
         if self.volume_button.is_just_pressed():
-            Scene.set_scene(SoundMenu())
+            Scene.set_scene(SoundSettingsMenuScene())
         
         if self.back_button.is_just_pressed():
             Scene.set_scene(MainMenuScene())
         
         if self.info_button.is_just_pressed():
-            Scene.set_scene(InfoMenu())
+            Scene.set_scene(InfoMenuScene())
     
     def unload(self) -> None:
         super().unload()
         
         ui.Button.clear_all()
 
-class InfoMenu(Scene):
+class InfoMenuScene(Scene):
     def load(self) -> None:
         super().load()
 
-        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file("assets/textures/back_button.png"))
-        self.info = ui.Button(glm.vec2(0.0, 0.0), 1, Texture.load_from_file("assets/textures/info.png"))
+        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file('assets/textures/back_button.png'))
+        self.info = ui.Button(glm.vec2(0.0, 0.0), 1, Texture.load_from_file('assets/textures/info.png'))
         
     def update(self) -> None:
         super().update()
@@ -272,9 +273,8 @@ class InfoMenu(Scene):
         ui.end()
         
         if self.back_button.is_just_pressed():
-            Scene.set_scene(OptinsMenu())
+            Scene.set_scene(SettingsMenuScene())
     
     def unload(self) -> None:
         super().unload()
         ui.Button.clear_all()
-        
