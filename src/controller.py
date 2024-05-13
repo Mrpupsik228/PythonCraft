@@ -5,19 +5,19 @@ from maths.camera import *
 def by_user(entity: LivingEntity) -> None:
     move_velocity = glm.vec2()
 
-    if Window.is_key_pressed(pygame.K_w):
+    if Window.is_key_pressed(pygame.K_w) or Window.is_key_pressed(pygame.K_UP):
         move_velocity.x += glm.sin(glm.radians(entity.transform.rotation.y))
         move_velocity.y -= glm.cos(glm.radians(entity.transform.rotation.y))
         
-    if Window.is_key_pressed(pygame.K_s):
+    if Window.is_key_pressed(pygame.K_s) or Window.is_key_pressed(pygame.K_DOWN):
         move_velocity.x += glm.sin(glm.radians(entity.transform.rotation.y + 180.0))
         move_velocity.y -= glm.cos(glm.radians(entity.transform.rotation.y + 180.0))
         
-    if Window.is_key_pressed(pygame.K_d):
+    if Window.is_key_pressed(pygame.K_d) or Window.is_key_pressed(pygame.K_RIGHT):
         move_velocity.x += glm.sin(glm.radians(entity.transform.rotation.y + 90.0))
         move_velocity.y -= glm.cos(glm.radians(entity.transform.rotation.y + 90.0))
         
-    if Window.is_key_pressed(pygame.K_a):
+    if Window.is_key_pressed(pygame.K_a) or Window.is_key_pressed(pygame.K_LEFT):
         move_velocity.x += glm.sin(glm.radians(entity.transform.rotation.y - 90.0))
         move_velocity.y -= glm.cos(glm.radians(entity.transform.rotation.y - 90.0))
     
