@@ -160,7 +160,7 @@ class MainMenuScene(Scene):
         ui.end()
         
         if self.options_button.is_just_pressed():
-            Scene.set_scene(SoundMenu())
+            Scene.set_scene(OptinsMenu())
             
         if self.play_button.is_just_pressed():
             Scene.set_scene(GameScene())
@@ -220,7 +220,7 @@ class SoundMenu(Scene):
         
         if self.back_button.is_just_pressed():
             print("Volume")
-            Scene.set_scene(MainMenuScene())
+            Scene.set_scene(OptinsMenu())
     
     def unload(self) -> None:
         super().unload()
@@ -229,3 +229,52 @@ class SoundMenu(Scene):
             Texture.clear(texture.get_id())
         
         ui.Button.clear_all()
+
+class OptinsMenu(Scene):
+    def load(self) -> None:
+        super().load()
+        
+        self.info_button = ui.Button(glm.vec2(0.2, 0.0), 0.4, Texture.load_from_file('assets/textures/info_button.png'))
+        self.volume_button = ui.Button(glm.vec2(-0.2, 0.0), 0.4, Texture.load_from_file('assets/textures/volume_100.png'))
+        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file("assets/textures/back_button.png"))
+
+    def update(self) -> None:
+        super().update()
+        ui.begin()
+        ui.Button.render_all()
+        ui.end()
+        
+        if self.volume_button.is_just_pressed():
+            Scene.set_scene(SoundMenu())
+        
+        if self.back_button.is_just_pressed():
+            Scene.set_scene(MainMenuScene())
+        
+        if self.info_button.is_just_pressed():
+            Scene.set_scene(InfoMenu())
+    
+    def unload(self) -> None:
+        super().unload()
+        
+        ui.Button.clear_all()
+
+class InfoMenu(Scene):
+    def load(self) -> None:
+        super().load()
+
+        self.back_button = ui.Button(glm.vec2(-0.885, 0.8), 0.3, Texture.load_from_file("assets/textures/back_button.png"))
+        self.info = ui.Button(glm.vec2(0.0, 0.0), 1, Texture.load_from_file("assets/textures/info.png"))
+        
+    def update(self) -> None:
+        super().update()
+        ui.begin()
+        ui.Button.render_all()
+        ui.end()
+        
+        if self.back_button.is_just_pressed():
+            Scene.set_scene(OptinsMenu())
+    
+    def unload(self) -> None:
+        super().unload()
+        ui.Button.clear_all()
+        
