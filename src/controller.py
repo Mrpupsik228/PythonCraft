@@ -1,3 +1,4 @@
+# імпортємо вікно для 
 from engine.graphics.window import *
 from entity import LivingEntity
 from maths.camera import *
